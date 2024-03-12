@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Savings Calculator</title>
+    <link rel="stylesheet" type="text/css" href="./static/style.css">
+</head>
+<body>
+    <div class="form-container">
+        <form action="/" method="post" id="calculatorForm">
+            <label>Starting Balance:</label>
+            <input type="number" min="0" name="startBal" required value="{{ request.form['startBal'] or '' }}">
+            <label>Goal Balance:</label>
+            <input type="number" min="0" name="goalBal" required value="{{ request.form['goalBal'] or '' }}">
+            <label>Monthly Investment:</label>
+            <input type="number" min="0" name="monthInv" required value="{{ request.form['monthInv'] or '' }}">
+            <label>Annual Interest Rate (%):</label>
+            <input type="number" min="0" step="0.01" name="annual_rate" required value="{{ request.form['annual_rate'] or '' }}">
+            <input type="submit" value="Calculate">
+        </form>
+        {% if months %}
+        <input type="hidden" id="originalMonths" value="{{ months }}">
+        <div id="result-container">
+            <p id="resultText"><span id="timeValue">{{ months }}</span> <span id="timeUnit" onclick="toggleUnit()">{{ 'months' }}</span> to reach your goal.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    <script type="text/javascript">
+        function toggleUnit() {
+            var timeUnitElement = document.getElementById('timeUnit');
+            var timeValueElement = document.getElementById('timeValue');
+            var originalMonths = document.getElementById('originalMonths').value; // from back end
+            var currentUnit = timeUnitElement.textContent;
+
+            if (currentUnit === 'months') {
+                timeUnitElement.textContent = 'years';
+                timeValueElement.textContent = (parseInt(originalMonths) / 12).toFixed(1);
+            } else {
+                timeUnitElement.textContent = 'months';
+                timeValueElement.textContent = originalMonths; // Display the original value without recalculating
+            }
+        }
+    </script>
+</body>
+</html>
